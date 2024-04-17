@@ -1,5 +1,7 @@
 package com.ajou.prcoding.Myweb.dto;
 
+import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
