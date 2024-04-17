@@ -1,6 +1,8 @@
 package com.ajou.prcoding.Myweb.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ajou.prcoding.Myweb.dto.*;
 import com.ajou.prcoding.Myweb.entity.FavoriteMusic;
@@ -29,5 +31,16 @@ public class MyWebController {
     @PostMapping(value="/likes")
     public int postLikes(@RequestBody FavoriteMusicRequestDto favorite) {
         return service.saveFavorite(favorite);
+    }
+
+    @DeleteMapping(value="/likes/{id}")
+    public ResponseEntity<String> deleteFavorite(@PathVariable String id) {
+        try {
+            service.deleteFavorite(id);
+            return ResponseEntity.ok("Favorite with ID " + id + " deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Failed to delete favorite with ID " + id);
+        }
     }
 }

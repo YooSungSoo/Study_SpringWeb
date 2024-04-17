@@ -34,5 +34,11 @@ public class MusicService {
         return (savedMusic != null) ? 1 : 0; 
     }
 
+    public void deleteFavorite(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        favoriteRepository.deleteById(id);
+    }
 }
     
