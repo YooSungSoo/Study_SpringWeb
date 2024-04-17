@@ -24,7 +24,7 @@ public class MyWebController {
     public  MusicList musicSearchByPath(@PathVariable String term) {
 
         try {
-            String response = restTemplate.getForObject("/musicSearch/{term}", String.class);
+            String response = restTemplate.getForObject("https://itunes.apple.com/search?term="+ term +"&entity=album ", String.class);
             ObjectMapper mapper = new ObjectMapper();
             MusicList list = mapper.readValue(response, MusicList.class);
             System.out.println(list.getResultCount());
@@ -38,7 +38,7 @@ public class MyWebController {
     @GetMapping(value="/musicSearch")
     public MusicList musicSearchByParam(@RequestParam String term) {
         try {
-            String response = restTemplate.getForObject("https://itunes.apple.com/search?term="+ name +"&entity=album ", String.class);
+            String response = restTemplate.getForObject("https://itunes.apple.com/search?term="+ term +"&entity=album ", String.class);
             ObjectMapper mapper = new ObjectMapper();
             MusicList list = mapper.readValue(response, MusicList.class);
             System.out.println(list.getResultCount());
