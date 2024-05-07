@@ -1,13 +1,17 @@
 package com.ajou.prcoding.Myweb.controller;
+import java.util.List;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.ajou.prcoding.Myweb.dto.MusicList;
+import com.ajou.prcoding.Myweb.entity.FavoriteMusic;
+import com.ajou.prcoding.Myweb.repository.FavoriteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MyWebController {
@@ -45,4 +49,20 @@ public class MyWebController {
           }
         
     }
+    @Autowired
+    FavoriteRepository albumsRepo;
+
+    //Get Favorite Music list from Database
+    @GetMapping(value="/likes") 
+    public List<FavoriteMusic> getLikes() {
+
+        try {
+            return albumsRepo.findAll();
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+}
+
 }
