@@ -25,13 +25,14 @@ public class MusicService {
     private final FavoriteRepository albumsRepo;
     RestTemplate restTemplate = new RestTemplate();
 
-    String url = "https://itunes.apple.com/search?term=aespa&entity=album";
+    String url = "https://itunes.apple.com/search?term=aespa&entity=album ";
     
     @GetMapping(value ="/musicSearch")
 	public MusicList searchMusic(@RequestParam(value="term") String name){
         RestTemplate  restTemplate =  new RestTemplate();
+        String url1= url.replace("aespa", name);
         try{
-            String response = restTemplate.getForObject(url, String.class);
+            String response = restTemplate.getForObject(url1, String.class);
             ObjectMapper mapper = new ObjectMapper();
             MusicList list = mapper.readValue(response, MusicList.class);
             System.out.println(list.getResultCount());
@@ -64,4 +65,16 @@ public class MusicService {
             return 0;
         }
     }
+
+    @PostMapping(value = "/likes/{id}")
+    public int deleteFavorite(String id){
+        FavoriteMusic music = albumsRepo.findById(id).orElse(null);
+        if(music != null){
+            System.out.println(id + "를 삭제했습니다");
+            return 0;            
+        }else{
+            return 1;
+        }
+    }
+
 }

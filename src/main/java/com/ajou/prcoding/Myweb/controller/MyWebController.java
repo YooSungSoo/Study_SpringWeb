@@ -3,6 +3,7 @@ package com.ajou.prcoding.Myweb.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,5 +41,11 @@ public class MyWebController {
     public int postLikes(@RequestBody FavoriteMusicRequestDto favorite) {
         return service.saveFavorite(favorite);
     }
+
+    @DeleteMapping(value ="/likes/{id}")
+    public int postLikes(@PathVariable String id){
+        return service.deleteFavorite(id);
+    }
+
 }
 

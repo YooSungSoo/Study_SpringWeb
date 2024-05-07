@@ -6,6 +6,5 @@ import com.ajou.prcoding.Myweb.entity.FavoriteMusic;
 public interface FavoriteRepository extends 	JpaRepository<FavoriteMusic, String>
  {
     List<FavoriteMusic> findAll();
-
     void deleteById(String id);
 }
