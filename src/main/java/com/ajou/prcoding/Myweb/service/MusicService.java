@@ -1,13 +1,21 @@
 package com.ajou.prcoding.Myweb.service;
+
+import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.ajou.prcoding.Myweb.dto.FavoriteMusicRequestDto;
 import com.ajou.prcoding.Myweb.dto.MusicList;
 import com.ajou.prcoding.Myweb.entity.FavoriteMusic;
 import com.ajou.prcoding.Myweb.repository.FavoriteRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,28 +25,43 @@ public class MusicService {
     private final FavoriteRepository albumsRepo;
     RestTemplate restTemplate = new RestTemplate();
 
-    private final FavoriteRepository favoriteRepository;
-
-    public MusicList searchMusic(String name) {
-        String url = "itunes.apple.com/search?term="+ name +"&entity=album" ;
-        return restTemplate.getForObject(url, MusicList.class);
-    }
-
-    public List<FavoriteMusic> getLikes() {
-        return favoriteRepository.findAll();
-    }
-
-    public int saveFavorite(FavoriteMusicRequestDto favorite) {
-        FavoriteMusic music = favorite.toEntity();
-        FavoriteMusic savedMusic = favoriteRepository.save(music);
-        return (savedMusic != null) ? 1 : 0; 
-    }
-
-    public void deleteFavorite(String id) {
-        if (id == null || id.isEmpty()) {
-            throw new IllegalArgumentException();
+    String url = "https://itunes.apple.com/search?term=aespa&entity=album";
+    
+    @GetMapping(value ="/musicSearch")
+	public MusicList searchMusic(@RequestParam(value="term") String name){
+        RestTemplate  restTemplate =  new RestTemplate();
+        try{
+            String response = restTemplate.getForObject(url, String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            MusicList list = mapper.readValue(response, MusicList.class);
+            System.out.println(list.getResultCount());
+            return list;
         }
-        favoriteRepository.deleteById(id);
+        catch(IOException e){
+            System.out.println(e.toString());
+        }
+        return null;
+    }
+
+    @GetMapping(value="/likes")
+    public List<FavoriteMusic> getLikes(){
+        try{
+            return albumsRepo.findAll();
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+
+    @PostMapping(value ="/likes")
+    public int saveFavorite(@RequestBody FavoriteMusicRequestDto favorite){
+        FavoriteMusic music = albumsRepo.save(favorite.toEntity());
+        if(music != null){
+            return 1;            
+        }
+        else{
+            return 0;
+        }
     }
 }
-    
