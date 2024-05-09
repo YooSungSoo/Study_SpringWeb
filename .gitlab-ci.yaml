@@ -1,0 +1,23 @@
+image: maven:3.8.5-openjdk-17
+# Cache downloaded dependencies and plugins between builds.
+# To keep cache across branches add 'key: "$CI_JOB_NAME"'
+stages:
+  - build
+  - deploy
+cache:
+  paths:
+    - .m2/repository
+    - ./target
+build:
+  image: maven:3.8.5-openjdk-17
+  stage: build
+  artifacts:
+    when: always
+    paths:
+      - ./target/*.jar
+      - Dockerfile
+  script:
+    - 'mvn package'
+    - echo "Hello, you are at build stage."
+  only:
+    - master
