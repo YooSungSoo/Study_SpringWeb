@@ -20,4 +20,20 @@ build:
     - 'mvn package'
     - echo "Hello, you are at build stage."
   only:
-    - master
+    - master (or master)
+deploy:docker:	
+  image: docker
+  services:
+    - "docker:dind"
+  stage: deploy
+  when: manual
+  before_script:
+    - docker login -u $DOCKER_HUB_USERID -p $DOCKER_HUB_PASSWORD
+  script:
+    - docker build -t myspringweb .
+    - docker tag myspringweb $DOCKER_HUB_USERID/myspringweb
+    - docker push $DOCKER_HUB_USERID/myspringweb
+  after_script:
+    - docker logout
+  only:
+    - main (or master)
