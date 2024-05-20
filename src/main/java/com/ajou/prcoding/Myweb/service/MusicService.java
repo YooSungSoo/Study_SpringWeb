@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,14 +68,15 @@ public class MusicService {
         }
     }
 
-    @PostMapping(value = "/likes/{id}")
-    public int deleteFavorite(String id){
+    @DeleteMapping(value = "/likes/{id}")
+    public int deleteFavorite(@PathVariable String id){
         FavoriteMusic music = albumsRepo.findById(id).orElse(null);
         if(music != null){
+            albumsRepo.deleteById(id);  
             System.out.println(id + "를 삭제했습니다");
-            return 0;            
+            return 1;           
         }else{
-            return 1;
+            return 0;  
         }
     }
 

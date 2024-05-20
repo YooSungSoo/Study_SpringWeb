@@ -43,9 +43,8 @@ public class MyWebController {
     }
 
     @DeleteMapping(value ="/likes/{id}")
-    public int postLikes(@PathVariable String id){
+    public int deleteFavorite(@PathVariable String id){
         return service.deleteFavorite(id);
     }
-
 }
 
