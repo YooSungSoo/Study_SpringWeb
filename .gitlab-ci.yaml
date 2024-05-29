@@ -20,7 +20,7 @@ build:
     - 'mvn package'
     - echo "Hello, you are at build stage."
   only:
-    - master (or master)
+    - master
 deploy:docker:	
   image: docker
   services:
@@ -36,4 +36,4 @@ deploy:docker:
   after_script:
     - docker logout
   only:
-    - main (or master)
+    - master
